@@ -1,12 +1,27 @@
 {
-  "name": "sails-hook-vane",
-  "version": "1.0.0",
-  "description": "",
+  "name": "captain-vane",
+  "version": "0.0.1",
+  "description": "Vane provides an easy way to create realistic dummy data to test out Waterline models",
   "main": "index.js",
+  "sails": {
+    "isHook": true,
+    "hookName": "vane"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "sails",
+    "sails-hook",
+    "testing",
+    "fake data"
+  ],
+  "author": "Kelvin Omereshone<kelvin@sailscasts.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@ngneat/falso": "^2.22.0"
+  },
+  "devDependencies": {
+    "sails": "^1.5.2"
+  }
 }
