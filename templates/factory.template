@@ -1,4 +1,0 @@
-const { fake } = require('captain-vane')
-module.exports = {
-  id: fake.randUuid(),
-}
