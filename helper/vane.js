@@ -8,17 +8,21 @@ module.exports = {
       type: "string",
       required: true,
     },
+    totalRecord: {
+      type: 'number',
+      defaultsTo: 1
+    },
     data: {
       type: "ref",
       defaultsTo: {},
-    },
+    }
   },
   exits: {
     success: {
       description: "All done.",
     },
   },
-  fn: async function ({ model, data: overwriteValues }) {
+  fn: async function ({ model, totalRecord, data: overwriteValues }) {
     const factoryPath = path.resolve(
       process.cwd(),
       `config/factories/${model}`
@@ -27,7 +31,17 @@ module.exports = {
     const factoryValues = require(factoryPath);
     const initialValues = { ...factoryValues, ...overwriteValues };
 
-    const result = await sails.models[model].create(initialValues).fetch();
+    let result = null;
+    const model = sails.models[model]
+    if(totalRecord <= 1){
+     result =  await model.create(initialValues).fetch();
+    }else {
+      const initialValuesArray = [];
+      for (let i = 0; i < totalRecord; i++) {
+        initialValuesArray.push(initialValues)
+      }
+      result = await model.createEach(initialValuesArray).fetch();
+    }
 
     return result;
   },
