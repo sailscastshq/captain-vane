@@ -38,7 +38,9 @@ module.exports = {
         initialValuesArray.push(initialValues)
       }
     const result = await model.createEach(initialValuesArray).fetch();
-    
+    if(count === 1){
+      return result[0]
+    }
     return result;
   },
 };
