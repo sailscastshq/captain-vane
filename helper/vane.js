@@ -23,7 +23,7 @@ module.exports = {
       description: "All done.",
     },
   },
-  fn: async function ({ model, count, data: overwriteValues }) {
+  fn: async function ({ model, data: overwriteValues, count }) {
     const factoryPath = path.resolve(
       process.cwd(),
       `config/factories/${model}`
