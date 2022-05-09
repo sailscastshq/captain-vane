@@ -8,12 +8,11 @@ module.exports = {
       type: "string",
       required: true,
     },
-    count: {
-      type: 'number',
-      min: 1,
-      defaultsTo: 1
-    },
     data: {
+      type: "ref",
+      defaultsTo: {},
+    },
+    options: {
       type: "ref",
       defaultsTo: {},
     }
@@ -23,24 +22,28 @@ module.exports = {
       description: "All done.",
     },
   },
-  fn: async function ({ model, data: overwriteValues, count }) {
+  fn: async function ({ model, data: overwriteValues, options }) {
     const factoryPath = path.resolve(
       process.cwd(),
       `config/factories/${model}`
     );
 
-    const factoryValues = require(factoryPath);
-    const initialValues = { ...factoryValues, ...overwriteValues };
-    const model = sails.models[model]
-    const initialValuesArray = [];
-    
-      for (let i = 0; i < count; i++) {
-        initialValuesArray.push(initialValues)
-      }
-    const result = await model.createEach(initialValuesArray).fetch();
-    if(count === 1){
-      return result[0]
+    const factoryOptions = {
+      count: 1, 
+      ...options
     }
-    return result;
+
+    const factoryValues = require(factoryPath).default;
+
+    const initialValues = { ...factoryValues(), ...overwriteValues };
+    const factoryModel = sails.models[model]
+
+    if(factoryOptions.count === 1) {
+      return await factoryModel.create(initialValues).fetch();
+    }
+
+    const initialValuesArray = Array.from({length: factoryOptions.count}, () => ({...factoryValues(), ...overwriteValues }) );
+
+    return await factoryModel.createEach(initialValuesArray).fetch();
   },
 };
