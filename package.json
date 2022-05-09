@@ -1,6 +1,6 @@
 {
   "name": "captain-vane",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Vane provides an easy way to create realistic dummy data to test out Waterline models",
   "main": "index.js",
   "sails": {

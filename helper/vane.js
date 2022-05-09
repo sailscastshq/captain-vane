@@ -12,23 +12,38 @@ module.exports = {
       type: "ref",
       defaultsTo: {},
     },
+    options: {
+      type: "ref",
+      defaultsTo: {},
+    }
   },
   exits: {
     success: {
       description: "All done.",
     },
   },
-  fn: async function ({ model, data: overwriteValues }) {
+  fn: async function ({ model, data: overwriteValues, options }) {
     const factoryPath = path.resolve(
       process.cwd(),
       `config/factories/${model}`
     );
 
-    const factoryValues = require(factoryPath);
-    const initialValues = { ...factoryValues, ...overwriteValues };
+    const factoryOptions = {
+      count: 1, 
+      ...options
+    }
 
-    const result = await sails.models[model].create(initialValues).fetch();
+    const factoryValues = require(factoryPath).default;
 
-    return result;
+    const initialValues = { ...factoryValues(), ...overwriteValues };
+    const factoryModel = sails.models[model]
+
+    if(factoryOptions.count === 1) {
+      return await factoryModel.create(initialValues).fetch();
+    }
+
+    const initialValuesArray = Array.from({length: factoryOptions.count}, () => ({...factoryValues(), ...overwriteValues }) );
+
+    return await factoryModel.createEach(initialValuesArray).fetch();
   },
 };
