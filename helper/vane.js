@@ -29,7 +29,8 @@ module.exports = {
     );
 
     const factoryOptions = {
-      count: 1, 
+      count: 1,
+      dry: false,
       ...options
     }
 
@@ -39,11 +40,11 @@ module.exports = {
     const factoryModel = sails.models[model]
 
     if(factoryOptions.count === 1) {
-      return await factoryModel.create(initialValues).fetch();
+      return  factoryOptions.dry ? initialValues : await factoryModel.create(initialValues).fetch();
     }
 
     const initialValuesArray = Array.from({length: factoryOptions.count}, () => ({...factoryValues(), ...overwriteValues }) );
 
-    return await factoryModel.createEach(initialValuesArray).fetch();
+    return factoryOptions.dry ? initialValuesArray : await factoryModel.createEach(initialValuesArray).fetch();
   },
 };
