@@ -17,6 +17,13 @@
     "fake data"
   ],
   "author": "Kelvin Omereshone<kelvin@sailscasts.com>",
+   "bugs": {
+    "url": "https://github.com/sailscastshq/captain-vane/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sailscastshq/captain-vane.git"
+  },
   "license": "MIT",
   "dependencies": {
     "@ngneat/falso": "^2.22.0"
